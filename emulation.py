@@ -1,7 +1,8 @@
 import numpy as np
-
 from colorama import init 
-  
+import copy  
+import random
+
 # Unicode suits characters
 suits = {"spades": u'\u2660', 
          "hearts": u'\u2665', 
@@ -17,16 +18,31 @@ def genCardDeck():
 
     return cardDeck
 
-def printCardDeck(cardDeck):
+def printCardDeck(cardDeck, message=None):
     init() 
     blackColor = '\033[37m'
     redColor = '\033[91m'
+    if message is not None:
+        print(blackColor, message + ":", end = " ")
     for card in cardDeck:
         color = blackColor if card["suit"] in [suits["spades"], suits["clubs"]] else redColor   
-        print(color, card['rank'] + card['suit'])
+        print(color, card['rank'] + card['suit'], end=' ')
+    print()
+
+def emulateGame(cardDeck, playersNum=5, cardsPerPlayer=5):
+    workingCardDeck = copy.deepcopy(cardDeck)
+    random.shuffle(workingCardDeck)
+    croupierHand = workingCardDeck[:cardsPerPlayer]
+    playerHands = []
+    for i in range(playersNum):
+        playerHands.append(workingCardDeck[cardsPerPlayer * (i + 1):cardsPerPlayer * (i + 2)])
+    printCardDeck(croupierHand, "croupier hand")
+    for (i, playerHand) in enumerate(playerHands):
+        printCardDeck(playerHand, "player " + str(i) + " hand")
 
 if __name__ == '__main__':
     cardDeck = genCardDeck()
     printCardDeck(cardDeck)
+    emulateGame(cardDeck)
 
     
