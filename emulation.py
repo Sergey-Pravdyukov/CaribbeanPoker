@@ -2,6 +2,7 @@ import numpy as np
 from colorama import init 
 import copy  
 import random
+import argparse
 
 # Unicode suits characters
 suits = {"spades": u'\u2660', 
@@ -29,7 +30,8 @@ def printCardDeck(cardDeck, message=None):
         print(color, card['rank'] + card['suit'], end=' ')
     print()
 
-def emulateGame(cardDeck, playersNum=5, cardsPerPlayer=5):
+def emulateGame(cardDeck, playersNum):
+    cardsPerPlayer = 5
     workingCardDeck = copy.deepcopy(cardDeck)
     random.shuffle(workingCardDeck)
     croupierHand = workingCardDeck[:cardsPerPlayer]
@@ -41,8 +43,12 @@ def emulateGame(cardDeck, playersNum=5, cardsPerPlayer=5):
         printCardDeck(playerHand, "player " + str(i) + " hand")
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--playersNum", type=int, default=5, help="Number of players exclude croupier.")
+    args = parser.parse_args()
+
     cardDeck = genCardDeck()
     printCardDeck(cardDeck)
-    emulateGame(cardDeck)
+    emulateGame(cardDeck, args.playersNum)
 
     
