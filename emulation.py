@@ -44,7 +44,7 @@ def emulateGame(cardDeck, playersNum):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--playersNum", type=int, default=5, help="Number of players exclude croupier.")
+    parser.add_argument("-n", "--playersNum", type=int, default=5, choices=range(1, 10), help="Number of players exclude croupier.")
     args = parser.parse_args()
 
     cardDeck = genCardDeck()
