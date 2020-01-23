@@ -1,10 +1,12 @@
-0. If combination > pare -bet
-1. If pare >= special card - bet
+0. If combination > pair -bet
+1. If pair >= special card - bet
 2. If special card left = 0 -bet
-3. If pare && special card=A,K - bet
+3. If pair && special card=A,K - bet
 4. If nothing && special card = A,K -fold
 5. If nothing && special card left=3 - fold
 6. If nothing && spacial card left =2 -fold
+
+
 
 
 3 Options {bet,fold,buy card}
