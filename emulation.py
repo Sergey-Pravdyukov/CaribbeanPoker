@@ -7,6 +7,9 @@ import math
 from statistics import mode
 from collections import Counter
 
+
+global result
+result =0
 # Unicode suits characters
 suits = {"spades": u'\u2660', 
          "hearts": u'\u2665', 
@@ -74,20 +77,52 @@ def emulateGame(cardDeck, playersNum):
     printCardDeck(croupierHand, "croupier hand")
     for (i, playerHand) in enumerate(playerHands):
         printCardDeck(playerHand, "player " + str(i) + " hand")
-    # for i in range(5):
-    #     print("Player" + str(i)+ " make your decision:")
-    #     decisions.append(input())
-    # print(decisions)
+    for i in range(5):
+        print("Player" + str(i)+ " make your decision:")
+        decisions.append(input())
+    print(decisions)
     croupierHand = workingCardDeck[0:playersNum]
     printCardDeck(croupierHand, "croupier hand")
     print()
     for ind,i in enumerate(playerHands):
-        if DefineCombination(turnHandIntoList(croupierHand))>DefineCombination(turnHandIntoList(i)):
-            print("Player"+ str(ind) + " is losing!")
-        elif DefineCombination(turnHandIntoList(croupierHand))<DefineCombination(turnHandIntoList(i)):
-            print("Player" + str(ind) + " is winning!")
-        else:
-            print("Player" + str(ind) + " is chopping!")
+        global result
+        if decisions[ind]=='fold':
+            print("Player"+ str(ind) + " is losing 5 dolars!")
+            result -=5
+        if decisions[ind]=='bet' and DefineCombination(turnHandIntoList(croupierHand)) < ('0High Card',[14,13,4,3,2]):
+            print("Player"+ str(ind)+ " is winning 5 dolars")
+            result +=5
+        if DefineCombination(turnHandIntoList(croupierHand))>DefineCombination(turnHandIntoList(i)) and decisions[ind]=='bet' and DefineCombination(turnHandIntoList(croupierHand)) >= ('0High Card',[14,13,4,3,2]):
+            print("Player"+ str(ind) + " is losing 15 dolars!")
+            result -=15
+        if DefineCombination(turnHandIntoList(croupierHand)) < DefineCombination(turnHandIntoList(i)) and decisions[ind] == 'bet' and DefineCombination(turnHandIntoList(croupierHand)) >= ('0High Card',[14,13,4,3,2]):
+            if DefineCombination(turnHandIntoList(i))[0] == "2Two pair":
+                print("Player"+ str(ind) + " is winning 25 dolars")
+                result +=25
+            elif DefineCombination(turnHandIntoList(i))[0] == "3Three of a kind":
+                print("Player"+ str(ind) + " is winning 35 dolars")
+                result +=35
+            elif DefineCombination(turnHandIntoList(i))[0] == "4Straight":
+                print("Player"+ str(ind) + " is winning 45 dolars")
+                result +=45
+            elif DefineCombination(turnHandIntoList(i))[0] == "5Flush":
+                print("Player"+ str(ind) + " is winning 55 dolars")
+                result +=55
+            elif DefineCombination(turnHandIntoList(i))[0] == "6Full House":
+                print("Player"+ str(ind) + " is winning 75 dolars")
+                result +=75
+            elif DefineCombination(turnHandIntoList(i))[0] == "7Quads":
+                print("Player"+ str(ind) + " is winning 205 dolars")
+                result +=205
+            elif DefineCombination(turnHandIntoList(i))[0] == "8Straight Flush":
+                print("Player"+ str(ind) + " is winning 505 dolars")
+                result +=505
+            elif DefineCombination(turnHandIntoList(i))[0] == "9Royal Flush":
+                print("Player"+ str(ind) + " is winning 1005 dolars")
+                result +=1005
+            else:
+                print("Player" + str(ind) + " is winning 15 dolars!")
+                result +=15
 
 def DefineCombination(l):
     list2 = list()
@@ -133,8 +168,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--playersNum", type=int, default=5, choices=range(1, 10), help="Number of players exclude croupier.")
     args = parser.parse_args()
-
-    cardDeck = genCardDeck()
-    printCardDeck(cardDeck)
-    emulateGame(cardDeck, args.playersNum)
+    for i in range(10):
+        cardDeck = genCardDeck()
+        printCardDeck(cardDeck)
+        emulateGame(cardDeck, args.playersNum)
+    print(result)
 
