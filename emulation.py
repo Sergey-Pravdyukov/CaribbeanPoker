@@ -32,6 +32,14 @@ Dictionary['Q']=12
 Dictionary['K']=13
 Dictionary['A']=14
 
+def allCroupierCardsWereDealed(croupiercard,PlayerHands):
+    cardsToBeDealed =[turnHandIntoList(croupiercard)[0][0]+ x for x in ['D','H','S','C']]
+    ListOfDealedCards= [turnHandIntoList(x) for x in PlayerHands]
+    ListOfDealedCards.append(turnHandIntoList(croupiercard))
+    ListOfDealedCards = [item for sublist in ListOfDealedCards for item in sublist]
+
+    return set(cardsToBeDealed).issubset(ListOfDealedCards)
+
 def genCardDeck():
     cardRanks = [str(x) for x in range(2, 10)] + ['T','J', 'Q', 'K', 'A']
 
@@ -78,8 +86,12 @@ def emulateGame(cardDeck, playersNum):
     for (i, playerHand) in enumerate(playerHands):
         printCardDeck(playerHand, "player " + str(i) + " hand")
     for i in range(5):
-        print("Player" + str(i)+ " make your decision:")
-        decisions.append(input())
+        if DefineCombination(turnHandIntoList(playerHands[i])) > ("1Pair",[2,2,3,4,5]):
+            decisions.append("bet")
+        else:
+            decisions.append("fold")
+    if allCroupierCardsWereDealed(croupierHand,PlayerHands=playerHands) and turnHandIntoList(croupierHand)[0][0] not in ['K','A']:
+        decisions = ['bet','bet','bet','bet','bet']
     print(decisions)
     croupierHand = workingCardDeck[0:playersNum]
     printCardDeck(croupierHand, "croupier hand")
@@ -168,9 +180,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--playersNum", type=int, default=5, choices=range(1, 10), help="Number of players exclude croupier.")
     args = parser.parse_args()
-    for i in range(10):
+    for i in range(100000):
         cardDeck = genCardDeck()
         printCardDeck(cardDeck)
         emulateGame(cardDeck, args.playersNum)
-    print(result)
 
+    print(result)
